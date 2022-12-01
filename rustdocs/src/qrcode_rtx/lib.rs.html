@@ -1,0 +1,264 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `qrcode_rtx/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../qrcode_rtx/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../qrcode_rtx/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../qrcode_rtx/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<span id="2">2</span>
+<span id="3">3</span>
+<span id="4">4</span>
+<span id="5">5</span>
+<span id="6">6</span>
+<span id="7">7</span>
+<span id="8">8</span>
+<span id="9">9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+</pre><pre class="rust"><code><span class="attribute">#![deny(rustdoc::broken_intra_doc_links)]
+
+</span><span class="kw">use </span>bitvec::prelude::{BitVec, Msb0};
+<span class="kw">use </span>constants::{qr_palette, BORDER, CHUNK_SIZE, FPS_DEN, FPS_NOM, SCALING};
+<span class="kw">use </span>qrcode_static::{png_qr, DataType};
+<span class="kw">use </span>qrcodegen::{QrCode, QrCodeEcc};
+<span class="kw">use </span>std::fs;
+<span class="kw">use </span>std::path::Path;
+
+<span class="doccomment">/// function to take data as `Vec&lt;u8&gt;`, apply `raptorq` to get `Vec&lt;EncodingPacket&gt;`
+/// and serialize it to get `Vec&lt;u8&gt;` output
+</span><span class="kw">pub fn </span>make_data_packs(input: <span class="kw-2">&amp;</span>[u8], chunk_size: u16) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Vec&lt;u8&gt;&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+    <span class="comment">// checking that data is not too long, set limit for now at 2^31 bit
+    </span><span class="kw">if </span>input.len() &gt;= <span class="number">0x80000000 </span>{
+        <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;Input data is too long, processing not possible&quot;</span>);
+    }
+    <span class="comment">// added at the beginning to each vector before transforming into qr code: contains input length info, also has first bit always 1 indicating it is new fountain qr - possibly need to change this later
+    </span><span class="kw">let </span>data_size_info = (input.len() <span class="kw">as </span>u32 + <span class="number">0x80000000</span>).to_be_bytes();
+
+    <span class="comment">// number of additional packets; currently roughly equal to number of core packets
+    </span><span class="kw">let </span>repair_packets_per_block: u32 = {
+        <span class="kw">if </span>input.len() <span class="kw">as </span>u32 &lt;= chunk_size <span class="kw">as </span>u32 {
+            <span class="number">0
+        </span>} <span class="kw">else </span>{
+            input.len() <span class="kw">as </span>u32 / chunk_size <span class="kw">as </span>u32
+        }
+    };
+    <span class="comment">// making `raptorq` Encoder, with defaults
+    </span><span class="kw">let </span>raptor_encoder = raptorq::Encoder::with_defaults(input, chunk_size);
+    <span class="comment">// making EncodingPacket and deserializing each into `Vec&lt;u8&gt;`
+    </span><span class="kw">let </span>out: Vec&lt;Vec&lt;u8&gt;&gt; = raptor_encoder
+        .get_encoded_packets(repair_packets_per_block)
+        .iter()
+        .map(|x| [data_size_info.to_vec(), x.serialize()].concat())
+        .collect();
+    <span class="kw">let </span>len_check = out[<span class="number">0</span>].len();
+    <span class="kw">for </span>x <span class="kw">in </span>out.iter() {
+        <span class="kw">if </span>x.len() != len_check {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;Encoded chunks have different length&quot;</span>);
+        }
+    }
+    <span class="kw">if </span>len_check &gt; <span class="number">2953 </span>{
+        <span class="comment">// 2953 is bytes limit for qr codes having 8-bit binary data
+        </span><span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;Encoded chunks too large to be turned into QR codes&quot;</span>);
+    }
+    <span class="prelude-val">Ok</span>(out)
+}
+
+<span class="doccomment">/// function to take data as `Vec&lt;Vec&lt;u8&gt;&gt;` with all stuff added and make `Vec&lt;QrCode&gt;`
+</span><span class="kw">fn </span>make_qr_codes(data: Vec&lt;Vec&lt;u8&gt;&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;QrCode&gt;, Box&lt;<span class="kw">dyn </span>std::error::Error&gt;&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>out: Vec&lt;QrCode&gt; = Vec::new();
+    <span class="kw">for </span>x <span class="kw">in </span>data.iter() {
+        <span class="kw">let </span>new = QrCode::encode_binary(x, QrCodeEcc::Low)<span class="question-mark">?</span>;
+        out.push(new);
+    }
+    <span class="prelude-val">Ok</span>(out)
+}
+
+<span class="kw">fn </span>make_apng&lt;P&gt;(
+    data: Vec&lt;QrCode&gt;,
+    output_name: P,
+    fps: u16,
+) -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>std::error::Error&gt;&gt;
+<span class="kw">where
+    </span>P: AsRef&lt;Path&gt;,
+{
+    <span class="kw">let </span><span class="kw-2">mut </span>output_file = fs::File::create(output_name)<span class="question-mark">?</span>;
+    <span class="kw">let </span>frames_count: u32 = data.len() <span class="kw">as </span>u32;
+    <span class="kw">let </span>border_size = BORDER * SCALING;
+
+    <span class="comment">// size is always positive and small
+    </span><span class="kw">let </span>size: u32 = (data[<span class="number">0</span>].size() <span class="kw">as </span>u32) * (SCALING <span class="kw">as </span>u32) + <span class="number">2 </span>* border_size <span class="kw">as </span>u32;
+    <span class="kw">let </span><span class="kw-2">mut </span>encoder = png::Encoder::new(<span class="kw-2">&amp;mut </span>output_file, size, size);
+
+    encoder.set_color(png::ColorType::Indexed);
+    encoder.set_palette(qr_palette());
+    encoder.set_animated(frames_count, <span class="number">0</span>)<span class="question-mark">?</span>;
+    encoder.set_frame_delay(FPS_NOM, fps)<span class="question-mark">?</span>;
+    encoder.set_depth(png::BitDepth::One);
+
+    <span class="kw">let </span><span class="kw-2">mut </span>writer = encoder.write_header()<span class="question-mark">?</span>;
+    <span class="comment">// making actual apng
+    // qr.get_module(x,y) = false corresponds to back color (white by default)
+    // qr.get_module(x,y) = true corresponds to main color (black by default)
+    </span><span class="kw">for </span>qr <span class="kw">in </span>data.iter() {
+        <span class="kw">let </span><span class="kw-2">mut </span>buffer: Vec&lt;u8&gt; = Vec::new();
+        <span class="kw">for </span>y <span class="kw">in </span><span class="number">0</span>..size {
+            <span class="kw">let </span><span class="kw-2">mut </span>pixels: BitVec&lt;u8, Msb0&gt; = BitVec::with_capacity(size <span class="kw">as </span>usize);
+            <span class="kw">for </span>x <span class="kw">in </span><span class="number">0</span>..size {
+                pixels
+                    .push(!qr.get_module(x <span class="kw">as </span>i32 / SCALING - BORDER, y <span class="kw">as </span>i32 / SCALING - BORDER))
+            }
+            buffer.extend_from_slice(<span class="kw-2">&amp;</span>pixels.into_vec());
+        }
+        writer.write_image_data(<span class="kw-2">&amp;</span>buffer)<span class="question-mark">?</span>;
+    }
+    writer.finish()<span class="question-mark">?</span>;
+
+    <span class="prelude-val">Ok</span>(())
+}
+
+<span class="doccomment">/// Function to transform input `Vec&lt;u8&gt;` into fountain qr-code
+</span><span class="kw">pub fn </span>transform_into_qr_apng&lt;P&gt;(
+    input: <span class="kw-2">&amp;</span>[u8],
+    chunk_size: u16,
+    fps: u16,
+    output_name: P,
+) -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>std::error::Error&gt;&gt;
+<span class="kw">where
+    </span>P: AsRef&lt;Path&gt;,
+{
+    <span class="kw">let </span>data_packs = make_data_packs(input, chunk_size)<span class="question-mark">?</span>;
+    make_apng(make_qr_codes(data_packs)<span class="question-mark">?</span>, output_name, fps)<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(())
+}
+
+<span class="doccomment">/// Function to make appropriately sized qr code, apng or static
+</span><span class="kw">pub fn </span>make_pretty_qr&lt;P&gt;(input: <span class="kw-2">&amp;</span>[u8], output_name: P) -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>std::error::Error&gt;&gt;
+<span class="kw">where
+    </span>P: AsRef&lt;Path&gt;,
+{
+    <span class="kw">if </span>input.len() &lt;= <span class="number">2953 </span>{
+        <span class="kw">let </span>qr = png_qr(input, DataType::Regular)<span class="question-mark">?</span>;
+        <span class="kw">match </span>std::fs::write(output_name, <span class="kw-2">&amp;</span>qr) {
+            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(()),
+            <span class="prelude-val">Err</span>(e) =&gt; <span class="prelude-val">Err</span>(Box::from(<span class="macro">format!</span>(<span class="string">&quot;Output error {}&quot;</span>, e))),
+        }
+    } <span class="kw">else </span>{
+        transform_into_qr_apng(input, CHUNK_SIZE, FPS_DEN, output_name)
+    }
+}
+</code></pre></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="qrcode_rtx" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0 (897e37553 2022-11-02)" ></div></body></html>
